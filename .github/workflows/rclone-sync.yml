@@ -1,0 +1,34 @@
+name: Rclone Sync Remotes
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_path:
+        description: "Source rclone path, for example: drive1:/folder"
+        required: true
+        type: string
+      destination_path:
+        description: "Destination rclone path, for example: drive2:/folder"
+        required: true
+        type: string
+
+jobs:
+  sync:
+    name: Sync files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install rclone
+        uses: AnimMouse/setup-rclone@v1
+        with:
+          rclone_config: ${{ secrets.RCLONE_CONFIG }}
+
+      - name: Copy missing files
+        env:
+          SOURCE_PATH: ${{ inputs.source_path }}
+          DESTINATION_PATH: ${{ inputs.destination_path }}
+        run: |
+          rclone copy "$SOURCE_PATH" "$DESTINATION_PATH" \
+            --ignore-existing \
+            --progress \
+            --stats=30s
