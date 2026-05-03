@@ -27,6 +27,7 @@ jobs:
         env:
           SOURCE_PATH: ${{ inputs.source_path }}
           DESTINATION_PATH: ${{ inputs.destination_path }}
+          RCLONE_CONFIG_PASS: ${{ secrets.RCLONE_CONFIG_PASS }}
         run: |
           rclone copy "$SOURCE_PATH" "$DESTINATION_PATH" \
             --ignore-existing \
